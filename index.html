@@ -765,18 +765,47 @@ Smoke
 
 </section>
 
-<footer>
-Made with 🌿 for a curious Class 4 learner
+<footer style="
+text-align:center;
+padding:40px 20px;
+font-weight:700;
+font-size:1.2rem;
+color:#145b31;
+line-height:1.8;
+">
+
+🌱 “Every big tree was once a tiny seed that never gave up.” 🌱
+
+<br><br>
+
+Keep learning little scientist ✨
+
 </footer>
 
 <script>
 
-const lines = [
-"Hello little friend! Welcome to the Photosynthesis Garden.",
-"Today we will learn how plants make their own food.",
-"Plants use sunlight water and carbon dioxide.",
-"They make food called glucose and release oxygen.",
-"That magical process is called photosynthesis!"
+const introText =
+"Hello little friend. Welcome to the magical Photosynthesis Garden. Today we will learn how green plants make their own food using sunlight water and air. Get ready for a fun science adventure.";
+
+const storyLines = [
+"Good morning little friend. I am a tiny happy plant.",
+"When the warm sun shines my green leaves wake up happily.",
+"My roots slowly drink cool water from the soil.",
+"My leaves gently take carbon dioxide from the air.",
+"Then I use sunlight to cook yummy food called glucose.",
+"After making food I release fresh oxygen into the air for everyone.",
+"And that magical process is called photosynthesis."
+];
+
+const narrationSteps = [
+"Step 1. Sunlight reaches the leaves. The green chlorophyll catches sunlight like a tiny solar panel.",
+"Step 2. Roots slowly drink water from the soil. The water gently travels up through the stem.",
+"Step 3. The leaves softly take carbon dioxide from the air through tiny holes called stomata.",
+"Step 4. Inside the leaf sunlight helps water and carbon dioxide turn into glucose. Glucose is food for the plant.",
+"Step 5. The plant happily releases oxygen into the air. Humans and animals breathe this oxygen.",
+"Step 6. The plant uses its food to grow taller and make flowers fruits and new leaves.",
+"Step 7. Extra food is carefully stored inside roots stems fruits and seeds for later.",
+"Step 8. Plants make nature beautiful healthy and full of life."
 ];
 
 function speak(text,onEnd){
@@ -797,15 +826,21 @@ function speak(text,onEnd){
       voices.find(v => v.name.includes('Samantha')) ||
       voices.find(v => v.name.includes('Google UK English Female')) ||
       voices.find(v => v.name.includes('Karen')) ||
+      voices.find(v => v.name.includes('Moira')) ||
       voices[0];
 
-    msg.rate = 0.85;
-    msg.pitch = 1.7;
+    // VERY SOFT SETTINGS
+    msg.rate = 0.72;
+    msg.pitch = 1.55;
     msg.volume = 1;
     msg.lang = "en-US";
 
     msg.onend = ()=>{
-      if(onEnd) onEnd();
+      if(onEnd){
+        setTimeout(()=>{
+          onEnd();
+        },1200); // pause after every sentence
+      }
     };
 
     speechSynthesis.speak(msg);
@@ -821,47 +856,53 @@ function speak(text,onEnd){
 window.addEventListener("load",()=>{
 
   setTimeout(()=>{
-
-    speak(
-      "Hello little friend! Welcome to the Photosynthesis Garden. Today we will learn how plants make food using sunlight water and air."
-    );
-
-  },1200);
+    speak(introText);
+  },1400);
 
 });
 
 function startFullNarration(){
 
-  const cards = document.querySelectorAll('.step-card');
+  // AUTO SCROLL TO PROCESS SECTION
+  document.getElementById("process")
+  .scrollIntoView({
+    behavior:"smooth"
+  });
 
-  const texts = [
-    "Sunlight reaches the leaves.",
-    "Roots drink water from the soil.",
-    "Leaves take carbon dioxide from the air.",
-    "Plants make food called glucose.",
-    "Plants release oxygen.",
-    "The plant grows using energy.",
-    "Extra food is stored.",
-    "Plants keep nature happy."
-  ];
+  const cards = document.querySelectorAll('.step-card');
 
   let i = 0;
 
   function next(){
 
-    cards.forEach(c=>c.classList.remove('active'));
+    cards.forEach(c=>{
+      c.classList.remove('active');
+    });
 
-    if(i >= texts.length){
-      speak("Amazing! You learned photosynthesis.");
+    if(i >= narrationSteps.length){
+
+      speak(
+        "Wonderful job little scientist. You learned the complete process of photosynthesis."
+      );
+
       return;
     }
 
     cards[i].classList.add('active');
 
-    speak(texts[i],()=>{
-      i++;
-      next();
+    // SCROLL TO CURRENT CARD
+    cards[i].scrollIntoView({
+      behavior:"smooth",
+      block:"center"
     });
+
+    speak(
+      narrationSteps[i],
+      ()=>{
+        i++;
+        next();
+      }
+    );
   }
 
   next();
@@ -871,35 +912,58 @@ function playStory(){
 
   let i = 0;
 
-  function next(){
+  function nextLine(){
 
-    if(i >= lines.length){
-      document.getElementById('storyCaption').textContent =
-      "Story complete! 🌟";
+    if(i >= storyLines.length){
+
+      document.getElementById("storyCaption")
+      .textContent =
+      "You listened to the magical plant story 🌱";
+
+      speak(
+        "Thank you for listening to my story little friend."
+      );
+
       return;
     }
 
-    document.getElementById('storyCaption').textContent = lines[i];
+    document.getElementById("storyCaption")
+    .textContent = storyLines[i];
 
-    speak(lines[i],()=>{
-      i++;
-      next();
-    });
+    speak(
+      storyLines[i],
+      ()=>{
+        i++;
+        nextLine();
+      }
+    );
   }
 
-  next();
+  nextLine();
 }
 
 function checkAnswer(ok){
 
-  const answer = document.getElementById('answer');
+  const answer =
+  document.getElementById("answer");
 
   if(ok){
-    answer.textContent = "Correct! Plants release oxygen 🌟";
-    speak("Correct! Plants release oxygen.");
+
+    answer.textContent =
+    "Correct! Plants release oxygen 🌟";
+
+    speak(
+      "Amazing answer little scientist. Plants release oxygen."
+    );
+
   }else{
-    answer.textContent = "Try Again 😊";
-    speak("Try again little friend.");
+
+    answer.textContent =
+    "Oops. Try again little friend 😊";
+
+    speak(
+      "Oops. Try again little friend."
+    );
   }
 }
 
